@@ -1,0 +1,26 @@
+`timescale 1ns/1ps
+module tb_arith;
+
+    reg A, B, Cin;
+    wire ha_sum, ha_c;
+    wire hs_diff, hs_b;
+    wire fa_sum, fa_c;
+    wire fs_diff, fs_b;
+
+    // instantiate modules
+    half_adder_gate HA (.A(A), .B(B), .SUM(ha_sum), .COUT(ha_c));
+    half_subtractor HS (.A(A), .B(B), .DIFF(hs_diff), .BOR(hs_b));
+    full_adder FA (.A(A), .B(B), .Cin(Cin), .Sum(fa_sum), .Cout(fa_c));
+    full_subtractor FS (.A(A), .B(B), .Bin(Cin), .Diff(fs_diff), .Bout(fs_b));
+
+    initial begin
+        $display("A B Cin | HA_SUM HA_C | HS_DIFF HS_B | FA_SUM FA_C | FS_DIFF FS_B");
+        for (integer i=0; i<8; i=i+1) begin
+            {A,B,Cin} = i;
+            #5; // wait for outputs to settle
+            $display("%b %b  %b  |   %b      %b   |    %b      %b   |   %b    %b   |   %b     %b",
+                     A,B,Cin, ha_sum, ha_c, hs_diff, hs_b, fa_sum, fa_c, fs_diff, fs_b);
+        end
+        $finish;
+    end
+endmodule
